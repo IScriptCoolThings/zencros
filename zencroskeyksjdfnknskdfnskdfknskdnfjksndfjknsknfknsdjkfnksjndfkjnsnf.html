@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+
+    <script>
+        function generateRandomString(length = 10) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function updateString() {
+            const currentTime = new Date().getTime();
+            const lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime') || '0', 10);
+            const interval = 30000;
+            
+            if (currentTime - lastUpdateTime >= interval) {
+                const newString = generateRandomString();
+                localStorage.setItem('randomString', newString);
+                localStorage.setItem('lastUpdateTime', currentTime.toString());
+            }
+
+            const randomString = localStorage.getItem('randomString');
+            document.getElementById('result').textContent = randomString;
+        }
+
+        updateString();
+        setInterval(updateString, 10000);
+    </script>
+</body>
+</html>
