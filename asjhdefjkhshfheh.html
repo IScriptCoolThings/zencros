@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random String Generator</title>
+    <title>Persistent Random String Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-    <h1>Random String Generator</h1>
+    <h1>Persistent Random String Generator</h1>
     <div id="result"></div>
 
     <script>
@@ -33,15 +33,27 @@
         }
 
         function updateString() {
-            const randomString = generateRandomString();
+            const currentTime = new Date().getTime();
+            const lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime') || '0', 10);
+            const interval = 30000; // 30 seconds in milliseconds
+
+            // Check if 30 seconds have passed since the last update
+            if (currentTime - lastUpdateTime >= interval) {
+                const newString = generateRandomString();
+                localStorage.setItem('randomString', newString);
+                localStorage.setItem('lastUpdateTime', currentTime.toString());
+            }
+
+            // Display the stored random string
+            const randomString = localStorage.getItem('randomString');
             document.getElementById('result').textContent = randomString;
         }
 
         // Update the string immediately when the page loads
         updateString();
 
-        // Set up an interval to update the string every 30 seconds
-        setInterval(updateString, 30000); // 30000 milliseconds = 30 seconds
+        // Set up an interval to check and update the string every 10 seconds
+        setInterval(updateString, 10000); // 10000 milliseconds = 10 seconds
     </script>
 </body>
 </html>
