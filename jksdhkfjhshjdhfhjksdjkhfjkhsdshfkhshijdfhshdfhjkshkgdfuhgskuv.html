@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key</title>
+</head>
+<body>
+    <pre id="luaCode"></pre> <!-- Use pre element to display Lua code -->
+
+    <script>
+        function generateRandomString(length = 10) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function updateString() {
+            const currentTime = new Date().getTime();
+            const lastUpdateTime = parseInt(localStorage.getItem('lastUpdateTime') || '0', 10);
+            const interval = 30000;
+            
+            if (currentTime - lastUpdateTime >= interval) {
+                const newString = generateRandomString();
+                localStorage.setItem('randomString', newString);
+                localStorage.setItem('lastUpdateTime', currentTime.toString());
+            }
+
+            const randomString = localStorage.getItem('randomString');
+            const luaCode = `return {\n"${randomString}"\n}`;
+            document.getElementById('luaCode').textContent = luaCode; // Use textContent for pre element
+        }
+
+        updateString();
+        setInterval(updateString, 10000);
+    </script>
+</body>
+</html>
